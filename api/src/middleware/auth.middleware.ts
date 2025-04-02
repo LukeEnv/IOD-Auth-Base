@@ -26,6 +26,11 @@ export const requireAuth = async (
 
     console.log(decoded);
 
+    if (!decoded) {
+      res.status(401).json({ message: "Unauthorized: Invalid token" });
+      return;
+    }
+
     const user = await findUserById(decoded.id);
 
     console.log(user);
