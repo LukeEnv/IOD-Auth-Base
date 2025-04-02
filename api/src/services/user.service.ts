@@ -7,10 +7,10 @@ let users: User[] = [
     id: 0,
     name: "John Doe",
     username: "luke",
-    password: "$2b$10$JiwvGdgXJTZESTZJgVpImOsUFK17TCwWy/Q.HJsvnN3mlN3T6FC3K",
+    password: "$2b$10$JiwvGdgXJTZESTZJgVpImOsUFK17TCwWy/Q.HJsvnN3mlN3T6FC3K", // "Password"
   },
 ];
-let userIndex = 0;
+let userIndex = 1;
 
 // Function to get all users
 export const getDBUsers = () => {
