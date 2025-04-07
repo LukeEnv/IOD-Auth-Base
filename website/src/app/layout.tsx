@@ -2,6 +2,7 @@ import { UserProvider } from "@/lib/contexts/user";
 import { DarkModeProvider } from "@/lib/contexts/darkmode";
 import { Poppins } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "sonner";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -23,6 +24,7 @@ export default function RootLayout({
             <div className="flex h-screen w-screen flex-col">{children}</div>
           </UserProvider>
         </DarkModeProvider>
+        <Toaster richColors />
       </body>
     </html>
   );

@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useUserContext } from "@/lib/contexts/user";
+import { toast } from "sonner";
 
 export default function Login() {
   const form = useForm({
@@ -34,8 +35,13 @@ export default function Login() {
       await refreshAccessToken();
       // Redirect to the dashboard
       router.push("/dashboard");
+      toast.success("Successfully signed in");
     } catch (error) {
-      console.error("Login failed:", error);
+      const errorMessage =
+        axios.isAxiosError(error) && error.response?.data?.message
+          ? error.response.data.message
+          : "Login failed";
+      toast.error(errorMessage);
     }
   };
 

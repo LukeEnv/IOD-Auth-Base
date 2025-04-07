@@ -4,6 +4,7 @@ import { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { User } from "@/types/user";
 import useSWR from "swr";
+import { toast } from "sonner";
 interface UserContextType {
   isAuthenticated: boolean;
   accessToken: string | null;
@@ -83,6 +84,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
       console.error("Error signing out:", error);
     } finally {
       setLoading(false);
+      toast.success("Successfully signed out");
     }
   };
 
