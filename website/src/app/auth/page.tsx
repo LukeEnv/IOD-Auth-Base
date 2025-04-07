@@ -6,7 +6,7 @@ import Register from "./_pages/register";
 
 export default function AuthPage() {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 max-w-sm justify-center items-center mx-auto my-auto">
       <h1 className="text-2xl font-bold">Welcome to the Auth Page</h1>
       <Tabs defaultValue="login" className="w-full">
         <TabsList className="w-full">

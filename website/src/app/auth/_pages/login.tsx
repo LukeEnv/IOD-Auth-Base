@@ -1,9 +1,11 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormField } from "@/components/ui/form";
-
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { useRouter } from "next/navigation";
+import { useUserContext } from "@/lib/contexts/user";
 
 export default function Login() {
   const form = useForm({
@@ -12,25 +14,29 @@ export default function Login() {
       password: "",
     },
   });
+  const router = useRouter();
+  const { refreshAccessToken } = useUserContext();
 
-  const onSubmit = ({
+  const onSubmit = async ({
     username,
     password,
   }: {
     username: string;
     password: string;
   }) => {
-    axios
-      .post("/api/auth/login", {
+    try {
+      const response = await axios.post("/api/auth/login", {
         username,
         password,
-      })
-      .then((response) => {
-        console.log("Login successful:", response.data);
-      })
-      .catch((error) => {
-        console.error("Login failed:", error);
       });
+      console.log("Login successful:", response.data);
+      // After login, refresh the access token (which should get it from the cookie)
+      await refreshAccessToken();
+      // Redirect to the dashboard
+      router.push("/dashboard");
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
   };
 
   return (

@@ -4,15 +4,16 @@ import { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { User } from "@/types/user";
 import useSWR from "swr";
-
 interface UserContextType {
   isAuthenticated: boolean;
   accessToken: string | null;
   accessTokenExpiry: number | null;
   setAccessToken: (token: string | null) => void;
   refreshAccessToken: () => Promise<void>;
+  signout: () => Promise<void>;
   user: User | null;
   loading: boolean;
+  initialized: boolean;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -20,12 +21,15 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [accessTokenExpiry, setAccessTokenExpiry] = useState<number | null>(
     null
   );
   const [loading, setLoading] = useState(true);
+  const [initialized, setInitialized] = useState(false);
+
+  // Derive isAuthenticated from accessToken
+  const isAuthenticated = !!accessToken;
 
   const { data: user, mutate: refetchUser } = useSWR(
     `/api/me`,
@@ -40,27 +44,49 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 
   const refreshAccessToken = async () => {
+    setLoading(true);
     try {
       const response = await axios.post("/api/auth/refresh-token");
       if (response.status !== 200) {
         setAccessToken(null);
         setAccessTokenExpiry(null);
-        setIsAuthenticated(false);
-        setLoading(false);
         return;
       }
 
       const { accessToken, accessTokenExpiry } = response.data;
-
       setAccessToken(accessToken);
       setAccessTokenExpiry(accessTokenExpiry);
+      if (accessToken) {
+        axios.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${accessToken}`;
+      }
     } catch {
-      //console.error("Error refreshing access token:", error);
+      setAccessToken(null);
+      setAccessTokenExpiry(null);
+    } finally {
+      setLoading(false);
+      setInitialized(true);
     }
   };
 
-  // FUNCTIONS
+  const signout = async () => {
+    setLoading(true);
+    try {
+      await axios.post("/api/auth/refresh-token/logout");
+      setAccessToken(null);
+      setAccessTokenExpiry(null);
+      if (typeof window !== "undefined") {
+        delete axios.defaults.headers.common["Authorization"];
+      }
+    } catch (error) {
+      console.error("Error signing out:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  // Call refetchUser only when a valid token is present
   useEffect(() => {
     if (isAuthenticated) {
       refetchUser();
@@ -73,24 +99,16 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
         refreshAccessToken();
       }
     }, 60000); // Check every minute
-
     return () => clearInterval(interval);
   }, [accessTokenExpiry]);
 
   useEffect(() => {
-    refreshAccessToken();
+    // Initial token refresh with a brief delay to allow cookie initialization in the browser
+    const timer = setTimeout(() => {
+      refreshAccessToken();
+    }, 500);
+    return () => clearTimeout(timer);
   }, []);
-
-  useEffect(() => {
-    if (accessToken) {
-      setIsAuthenticated(true);
-    } else {
-      setIsAuthenticated(false);
-    }
-    setLoading(false);
-  }, [accessToken]);
-
-  // RETURN
 
   return (
     <UserContext.Provider
@@ -100,8 +118,10 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
         accessTokenExpiry,
         setAccessToken,
         refreshAccessToken,
+        signout,
         user,
         loading,
+        initialized,
       }}
     >
       {children}

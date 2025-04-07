@@ -13,7 +13,7 @@ import {
   TokenPayload,
   verifyRefreshToken,
 } from "../utils/jwt";
-import { User } from "@/types/user";
+import { removeRefreshToken } from "../services/auth.service";
 
 export const loginUser = async (
   req: Request<{}, {}, { username: string; password: string }>,
@@ -104,5 +104,45 @@ export const refreshToken = async (
   } catch (err) {
     res.status(403).json({ message: "Invalid refresh token." });
     return;
+  }
+};
+
+export const logoutUser = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  console.log("Logout user");
+  try {
+    const refreshToken = req.cookies.rft;
+
+    console.log("Refresh token:", refreshToken);
+    if (!refreshToken) {
+      res.status(401).json({ message: "No refresh token provided." });
+      return;
+    }
+    const decoded = verifyRefreshToken(refreshToken) as TokenPayload;
+    if (!decoded) {
+      res.status(403).json({ message: "Invalid refresh token." });
+      return;
+    }
+
+    if (decoded.token) {
+      removeRefreshToken(decoded.token);
+    } else {
+      res.status(400).json({ message: "Invalid token provided." });
+      return;
+    }
+
+    res.clearCookie("rft", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      path: "/api/auth/refresh-token",
+      sameSite: "strict",
+    });
+
+    res.status(200).json({ message: "Logout successful." });
+  } catch (error) {
+    console.error("Logout error:", error);
+    res.status(500).json({ message: "Logout failed." });
   }
 };
