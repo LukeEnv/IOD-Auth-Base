@@ -41,6 +41,11 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
         },
       });
       return res.data;
+    },
+    {
+      revalidateOnFocus: false,
+      shouldRetryOnError: true,
+      refreshInterval: 0,
     }
   );
 
