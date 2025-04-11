@@ -39,3 +39,29 @@ export const findUserByUsername = (username: string) => {
 export const findUserById = (id: number) => {
   return users.find((user) => user.id === id);
 };
+
+// Function to update a user
+export const updateDBUser = ({
+  id,
+  name,
+  username,
+  password,
+}: {
+  id: number;
+  name?: string;
+  username?: string;
+  password?: string;
+}) => {
+  const userIndex = users.findIndex((user) => user.id === id);
+  if (userIndex === -1) {
+    return null; // User not found
+  }
+
+  const updatedUser = { ...users[userIndex] };
+  if (name) updatedUser.name = name;
+  if (username) updatedUser.username = username;
+  if (password) updatedUser.password = password;
+
+  users[userIndex] = updatedUser;
+  return updatedUser;
+};

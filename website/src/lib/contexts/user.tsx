@@ -11,6 +11,7 @@ interface UserContextType {
   accessTokenExpiry: number | null;
   setAccessToken: (token: string | null) => void;
   refreshAccessToken: () => Promise<void>;
+  updateUser: (user: User) => Promise<void>;
   signout: () => Promise<void>;
   user: User | null;
   loading: boolean;
@@ -48,6 +49,22 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
       refreshInterval: 0,
     }
   );
+
+  const updateUser = async (updatedUser: User) => {
+    try {
+      const response = await axios.put(`/api/me`, updatedUser, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      refetchUser();
+      toast.success("User updated successfully!");
+      return response.data;
+    } catch (error) {
+      console.error("Error updating user:", error);
+      throw error;
+    }
+  };
 
   const refreshAccessToken = async () => {
     setLoading(true);
@@ -125,6 +142,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
         accessTokenExpiry,
         setAccessToken,
         refreshAccessToken,
+        updateUser,
         signout,
         user,
         loading,
