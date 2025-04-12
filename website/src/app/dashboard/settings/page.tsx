@@ -13,11 +13,10 @@ import {
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export default function Page() {
   const { user, updateUser } = useUserContext();
-  const [isChanged, setIsChanged] = useState(false);
 
   const form = useForm({
     defaultValues: {
@@ -26,6 +25,8 @@ export default function Page() {
       password: "",
     },
   });
+
+  const { formState } = form; // Access formState to use dirtyFields
 
   useEffect(() => {
     form.reset({
@@ -39,31 +40,23 @@ export default function Page() {
     username?: string;
     password?: string;
   }) => {
-    // Compare the current form values with the original user values to check for changes
-    const changedValues = Object.keys(data).reduce((acc, key) => {
-      const typedKey = key as keyof typeof data;
-      if (data[typedKey] !== user?.[typedKey]) {
-        acc[typedKey] = data[typedKey];
-      }
-      return acc;
-    }, {} as Partial<typeof data>);
+    const changedValues: Partial<{
+      name: string;
+      username: string;
+      password: string;
+    }> = {};
+
+    // Check for changes using dirtyFields
+    if (formState.dirtyFields.name) changedValues.name = data.name;
+    if (formState.dirtyFields.username) changedValues.username = data.username;
+    if (formState.dirtyFields.password) changedValues.password = data.password;
 
     // Only invoke updateUser if there are changes
     if (Object.keys(changedValues).length > 0) {
       updateUser(changedValues);
-      setIsChanged(false);
     } else {
       console.log("No changes detected.");
     }
-  };
-
-  const handleInputChange = () => {
-    const currentValues = form.getValues();
-    const hasChanges = Object.keys(currentValues).some((key) => {
-      const typedKey = key as keyof typeof currentValues;
-      return currentValues[typedKey] !== user?.[typedKey];
-    });
-    setIsChanged(hasChanges);
   };
 
   return (
@@ -73,11 +66,7 @@ export default function Page() {
 
       <Card className="w-full mt-10 p-5">
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            onChange={handleInputChange}
-            className="space-y-4"
-          >
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
               name="name"
@@ -140,7 +129,7 @@ export default function Page() {
               className="cursor-pointer"
               type="submit"
               size={"sm"}
-              disabled={!isChanged}
+              disabled={!formState.isDirty} // Disable button if no changes
             >
               Save
             </Button>
