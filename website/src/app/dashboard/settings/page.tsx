@@ -22,6 +22,7 @@ export default function Page() {
     defaultValues: {
       name: user?.name || "",
       username: user?.username || "",
+      password: "",
     },
   });
 
@@ -32,8 +33,26 @@ export default function Page() {
     });
   }, [user, form]);
 
-  const onSubmit = (data: any) => {
-    updateUser(data);
+  const onSubmit = (data: {
+    name?: string;
+    username?: string;
+    password?: string;
+  }) => {
+    // Compare the current form values with the original user values to check for changes
+    const changedValues = Object.keys(data).reduce((acc, key) => {
+      const typedKey = key as keyof typeof data;
+      if (data[typedKey] !== user?.[typedKey]) {
+        acc[typedKey] = data[typedKey];
+      }
+      return acc;
+    }, {} as Partial<typeof data>);
+
+    // Only invoke updateUser if there are changes
+    if (Object.keys(changedValues).length > 0) {
+      updateUser(changedValues);
+    } else {
+      console.log("No changes detected.");
+    }
   };
 
   return (
@@ -78,6 +97,26 @@ export default function Page() {
                   </FormControl>
                   <FormDescription>
                     This is your unique username.
+                  </FormDescription>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="password"
+                      placeholder="Your password"
+                      className="input"
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Leave blank if you don't want to change your password.
                   </FormDescription>
                 </FormItem>
               )}

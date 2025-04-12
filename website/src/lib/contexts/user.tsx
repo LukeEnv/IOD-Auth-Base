@@ -11,7 +11,11 @@ interface UserContextType {
   accessTokenExpiry: number | null;
   setAccessToken: (token: string | null) => void;
   refreshAccessToken: () => Promise<void>;
-  updateUser: (user: User) => Promise<void>;
+  updateUser: (updatedUser: {
+    name?: string;
+    username?: string;
+    password?: string;
+  }) => Promise<void>;
   signout: () => Promise<void>;
   user: User | null;
   loading: boolean;
@@ -50,7 +54,11 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   );
 
-  const updateUser = async (updatedUser: User) => {
+  const updateUser = async (updatedUser: {
+    name?: string;
+    username?: string;
+    password?: string;
+  }) => {
     try {
       const response = await axios.put(`/api/me`, updatedUser, {
         headers: {

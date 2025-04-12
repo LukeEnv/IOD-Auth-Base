@@ -11,6 +11,7 @@ let users: User[] = [
   },
 ];
 let userIndex = 1;
+import bcrypt from "bcrypt";
 
 // Function to get all users
 export const getDBUsers = () => {
@@ -60,7 +61,8 @@ export const updateDBUser = ({
   const updatedUser = { ...users[userIndex] };
   if (name) updatedUser.name = name;
   if (username) updatedUser.username = username;
-  if (password) updatedUser.password = password;
+  // Hash the password before storing it
+  if (password) updatedUser.password = bcrypt.hashSync(password, 10);
 
   users[userIndex] = updatedUser;
   return updatedUser;
