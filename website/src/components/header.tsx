@@ -21,6 +21,12 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { useDarkMode } from "@/lib/contexts/darkmode";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipProvider,
+  TooltipContent,
+} from "./ui/tooltip";
 
 export default function Header() {
   const { user, signout } = useUserContext();
@@ -32,25 +38,38 @@ export default function Header() {
       <div className="w-full">
         <div className="flex w-full px-6 py-4 gap-8 items-center">
           <Activity className="text-orange-600" />
+
           <div className="flex gap-2">
-            <Link href="/dashboard">
-              <Button
-                size={"icon"}
-                variant={pathname === "/dashboard" ? "default" : "ghost"}
-              >
-                <House />
-              </Button>
-            </Link>
-            <Link href="/dashboard/settings">
-              <Button
-                size={"icon"}
-                variant={
-                  pathname === "/dashboard/settings" ? "default" : "ghost"
-                }
-              >
-                <Settings />
-              </Button>
-            </Link>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Link href="/dashboard">
+                    <Button
+                      size={"icon"}
+                      variant={pathname === "/dashboard" ? "default" : "ghost"}
+                    >
+                      <House />
+                    </Button>
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent>Dashboard</TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Link href="/dashboard/settings">
+                    <Button
+                      size={"icon"}
+                      variant={
+                        pathname === "/dashboard/settings" ? "default" : "ghost"
+                      }
+                    >
+                      <Settings />
+                    </Button>
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent>Settings</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
           <div className="flex-1 flex justify-end">
             <DropdownMenu>

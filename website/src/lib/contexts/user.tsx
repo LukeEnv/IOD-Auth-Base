@@ -50,7 +50,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     {
       revalidateOnFocus: false,
       shouldRetryOnError: true,
-      refreshInterval: 0,
+      refreshInterval: 0, // Disable automatic revalidation
     }
   );
 
