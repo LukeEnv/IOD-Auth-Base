@@ -13,10 +13,11 @@ import {
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function Page() {
   const { user, updateUser } = useUserContext();
+  const [isChanged, setIsChanged] = useState(false);
 
   const form = useForm({
     defaultValues: {
@@ -50,9 +51,19 @@ export default function Page() {
     // Only invoke updateUser if there are changes
     if (Object.keys(changedValues).length > 0) {
       updateUser(changedValues);
+      setIsChanged(false);
     } else {
       console.log("No changes detected.");
     }
+  };
+
+  const handleInputChange = () => {
+    const currentValues = form.getValues();
+    const hasChanges = Object.keys(currentValues).some((key) => {
+      const typedKey = key as keyof typeof currentValues;
+      return currentValues[typedKey] !== user?.[typedKey];
+    });
+    setIsChanged(hasChanges);
   };
 
   return (
@@ -62,7 +73,11 @@ export default function Page() {
 
       <Card className="w-full mt-10 p-5">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            onChange={handleInputChange}
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="name"
@@ -121,7 +136,12 @@ export default function Page() {
                 </FormItem>
               )}
             />
-            <Button className="cursor-pointer" type="submit" size={"sm"}>
+            <Button
+              className="cursor-pointer"
+              type="submit"
+              size={"sm"}
+              disabled={!isChanged}
+            >
               Save
             </Button>
           </form>
