@@ -60,8 +60,8 @@ export default function Page() {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <p className="text-4xl font-bold flex items-center gap-2">Settings</p>
+    <div className="flex flex-col font-poppins">
+      <p className="text-4xl font-bold flex items-center">Settings</p>
       <p>Update your profile settings below.</p>
 
       <Card className="w-full mt-10 p-5">
@@ -78,7 +78,7 @@ export default function Page() {
                       {...field}
                       type="text"
                       placeholder="Your name"
-                      className="input"
+                      className="input "
                     />
                   </FormControl>
                   <FormDescription>This is your display name.</FormDescription>
@@ -120,7 +120,7 @@ export default function Page() {
                     />
                   </FormControl>
                   <FormDescription>
-                    Leave blank if you don't want to change your password.
+                    Leave blank if you don&apos;t want to change your password.
                   </FormDescription>
                 </FormItem>
               )}

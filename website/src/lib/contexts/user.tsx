@@ -20,6 +20,24 @@ interface UserContextType {
   user: User | null;
   loading: boolean;
   initialized: boolean;
+  DeleteActivity: (id: number) => Promise<void>;
+  AddActivity: (activity: {
+    name: string;
+    duration: number;
+    calories: number;
+    distance: number;
+    date: string;
+  }) => Promise<void>;
+  UpdateActivity: (
+    id: number,
+    activity: {
+      name: string;
+      duration: number;
+      calories: number;
+      distance: number;
+      date: string;
+    }
+  ) => Promise<void>;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -101,6 +119,87 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const AddActivity = async (activity: {
+    name: string;
+    duration: number;
+    calories: number;
+    distance: number;
+    date: string;
+  }) => {
+    setLoading(true);
+    try {
+      const response = await axios.post(`/api/me/activity`, activity, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      if (response.status === 201) {
+        toast.success("Activity added successfully!");
+        refetchUser();
+      } else {
+        toast.error("Failed to add activity");
+      }
+    } catch (error) {
+      console.error("Error adding activity:", error);
+      toast.error("Error adding activity");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const UpdateActivity = async (
+    id: number,
+    activity: {
+      name: string;
+      duration: number;
+      calories: number;
+      distance: number;
+      date: string;
+    }
+  ) => {
+    setLoading(true);
+    try {
+      const response = await axios.put(`/api/me/activity/${id}`, activity, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      if (response.status === 200) {
+        toast.success("Activity updated successfully!");
+        refetchUser();
+      } else {
+        toast.error("Failed to update activity");
+      }
+    } catch (error) {
+      console.error("Error updating activity:", error);
+      toast.error("Error updating activity");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const DeleteActivity = async (id: number) => {
+    setLoading(true);
+    try {
+      const response = await axios.delete(`/api/me/activity/${id}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      if (response.status === 200) {
+        toast.success("Activity deleted successfully!");
+        refetchUser();
+      } else {
+        toast.error("Failed to delete activity");
+      }
+    } catch (error) {
+      console.error("Error deleting activity:", error);
+      toast.error("Error deleting activity");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const signout = async () => {
     setLoading(true);
     try {
@@ -155,6 +254,9 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
         user,
         loading,
         initialized,
+        DeleteActivity,
+        AddActivity,
+        UpdateActivity,
       }}
     >
       {children}

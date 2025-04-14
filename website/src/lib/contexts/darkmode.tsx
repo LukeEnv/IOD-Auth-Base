@@ -17,11 +17,6 @@ export function DarkModeProvider({ children }: { children: React.ReactNode }) {
 
   // Initialize dark mode from the cookie
   useEffect(() => {
-    // if (pathname === "/") {
-    //   // Automatically enable dark mode on the home page
-    //   // setIsDarkMode(true);
-    //   // document.documentElement.classList.add("dark");
-    // } else {
     const darkModeCookie = document.cookie
       .split("; ")
       .find((row) => row.startsWith("dark_mode="));
@@ -37,11 +32,6 @@ export function DarkModeProvider({ children }: { children: React.ReactNode }) {
 
   // Toggle dark mode and update the cookie
   const toggleDarkMode = () => {
-    // if (pathname === "/") {
-    //   document.cookie = "dark_mode=; path=/; max-age=0"; // Clear the cookie
-    //   return true;
-    // }
-
     setIsDarkMode((prev) => {
       const newMode = !prev;
       document.cookie = `dark_mode=${newMode}; path=/; max-age=31536000`; // 1 year

@@ -47,6 +47,7 @@ export default function Header() {
                     <Button
                       size={"icon"}
                       variant={pathname === "/dashboard" ? "default" : "ghost"}
+                      className="cursor-pointer"
                     >
                       <House />
                     </Button>
@@ -62,6 +63,7 @@ export default function Header() {
                       variant={
                         pathname === "/dashboard/settings" ? "default" : "ghost"
                       }
+                      className="cursor-pointer"
                     >
                       <Settings />
                     </Button>
