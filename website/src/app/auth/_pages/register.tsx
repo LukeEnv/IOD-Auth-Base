@@ -4,6 +4,7 @@ import { Form, FormField } from "@/components/ui/form";
 
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { toast } from "sonner";
 
 export default function Register() {
   const form = useForm({
@@ -30,9 +31,11 @@ export default function Register() {
         password,
       })
       .then((response) => {
+        toast.success("Signup successful!");
         console.log("Signup successful:", response.data);
       })
       .catch((error) => {
+        toast.error("Signup failed!");
         console.error("Signup failed:", error);
       });
   };
