@@ -13,9 +13,9 @@ import {
 
 import { Input } from "@/components/ui/input";
 
-import { useUserContext } from "@/lib/contexts/user";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import { useActivityContext } from "@/lib/contexts/activity";
 
 export default function EditActivity({
   activity,
@@ -29,7 +29,8 @@ export default function EditActivity({
     date: string;
   };
 }) {
-  const { user, UpdateActivity } = useUserContext();
+  const { UpdateActivity } = useActivityContext();
+
   const form = useForm({
     defaultValues: {
       name: activity.name,
@@ -59,7 +60,8 @@ export default function EditActivity({
         <DialogHeader>
           <DialogTitle>Edit Activity</DialogTitle>
           <DialogDescription>
-            Make changes to your activity here. Click save when you're done.
+            Make changes to your activity here. Click save when you&apos;re
+            done.
           </DialogDescription>
         </DialogHeader>
         <form

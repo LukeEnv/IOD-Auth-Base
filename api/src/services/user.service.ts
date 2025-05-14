@@ -10,27 +10,10 @@ let users: User[] = [
     password: "$2b$10$JiwvGdgXJTZESTZJgVpImOsUFK17TCwWy/Q.HJsvnN3mlN3T6FC3K", // "Password"
     steps: 0,
     stepsGoal: 10000,
-    activities: [
-      {
-        id: 0,
-        name: "Running",
-        date: "2023-10-01",
-        duration: 30,
-        calories: 300,
-        distance: 5,
-      },
-      {
-        id: 1,
-        name: "Cycling",
-        date: "2023-10-02",
-        duration: 45,
-        calories: 400,
-        distance: 15,
-      },
-    ],
     activityGoal: 30,
   },
 ];
+
 let userIndex = 1;
 import bcrypt from "bcrypt";
 
@@ -97,69 +80,6 @@ export const updateDBUserSteps = (id: number, steps: number) => {
 
   const updatedUser = { ...users[userIndex] };
   updatedUser.steps = steps;
-
-  users[userIndex] = updatedUser;
-  return updatedUser;
-};
-
-export const addActivityToUser = (id: number, activity: Activity) => {
-  const userIndex = users.findIndex((user) => user.id === id);
-  if (userIndex === -1) {
-    return null; // User not found
-  }
-
-  const updatedUser = { ...users[userIndex] };
-  if (!updatedUser.activities) {
-    updatedUser.activities = [];
-  }
-  updatedUser.activities.push(activity);
-
-  users[userIndex] = updatedUser;
-  return updatedUser;
-};
-
-export const deleteActivityFromUser = (userId: number, activityId: number) => {
-  const userIndex = users.findIndex((user) => user.id === userId);
-  if (userIndex === -1) {
-    return null; // User not found
-  }
-
-  const updatedUser = { ...users[userIndex] };
-  if (!updatedUser.activities) {
-    return null; // No activities to delete
-  }
-
-  updatedUser.activities = updatedUser.activities.filter(
-    (activity) => activity.id !== activityId
-  );
-
-  users[userIndex] = updatedUser;
-  return updatedUser;
-};
-
-export const updateActivityInUser = (
-  userId: number,
-  activityId: number,
-  updatedActivity: Activity
-) => {
-  const userIndex = users.findIndex((user) => user.id === userId);
-  if (userIndex === -1) {
-    return null; // User not found
-  }
-
-  const updatedUser = { ...users[userIndex] };
-  if (!updatedUser.activities) {
-    return null; // No activities to update
-  }
-
-  const activityIndex = updatedUser.activities.findIndex(
-    (activity) => activity.id === activityId
-  );
-  if (activityIndex === -1) {
-    return null; // Activity not found
-  }
-
-  updatedUser.activities[activityIndex] = updatedActivity;
 
   users[userIndex] = updatedUser;
   return updatedUser;

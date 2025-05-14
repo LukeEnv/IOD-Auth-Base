@@ -1,12 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useUserContext } from "@/lib/contexts/user";
 import { redirect, RedirectType } from "next/navigation";
 import { Activity } from "lucide-react";
+import { useTokenContext } from "@/lib/contexts/token";
 
 export default function Page() {
-  const { isAuthenticated } = useUserContext();
+  const { isAuthenticated } = useTokenContext();
 
   return (
     <div className="flex h-full w-full justify-center items-center">

@@ -10,14 +10,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useUserContext } from "@/lib/contexts/user";
+import { useActivityContext } from "@/lib/contexts/activity";
 
 import EditActivity from "./editActivity";
 import AddActivity from "./addActivity";
+import EditSteps from "./editSteps";
 
 export default function Activity() {
-  const { user } = useUserContext();
-  const { DeleteActivity } = useUserContext();
+  const { DeleteActivity, activities } = useActivityContext();
 
   function handleDeleteActivity(id: number) {
     DeleteActivity(id);
@@ -27,7 +27,10 @@ export default function Activity() {
     <div className="mt-10 font-poppins flex flex-col gap-2">
       <div className="flex justify-between items-center">
         <p className="font-bold">Activity</p>
-        <AddActivity />
+        <div className="flex gap-2">
+          <EditSteps />
+          <AddActivity />
+        </div>
       </div>
 
       <Table>
@@ -43,7 +46,7 @@ export default function Activity() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {user?.activities?.map((activity) => (
+          {activities?.map((activity) => (
             <TableRow key={activity.id}>
               <TableCell>{activity.date}</TableCell>
               <TableCell>{activity.name}</TableCell>

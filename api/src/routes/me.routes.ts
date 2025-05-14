@@ -5,16 +5,10 @@ import {
   NextFunction,
   RequestHandler,
 } from "express";
-import { loginUser, refreshToken } from "../controllers/auth.controller";
 import { requireAuth } from "../middleware/auth.middleware";
-import { User } from "@/types/user";
+import { User } from "../types/user";
 import { findUserByUsername, updateDBUser } from "../services/user.service";
-import {
-  updateSteps,
-  newActivity,
-  deleteActivity,
-  updateActivity,
-} from "../controllers/user.controller";
+import { updateSteps } from "../controllers/user.controller";
 
 const router = Router();
 
@@ -69,9 +63,6 @@ router.put(
   }
 );
 
-router.put("/activity/steps", requireAuth, updateSteps);
-router.post("/activity/", requireAuth, newActivity);
-router.delete("/activity/:id", requireAuth, deleteActivity);
-router.put("/activity/:id", requireAuth, updateActivity);
+router.put("/steps", requireAuth, updateSteps);
 
 export default router;

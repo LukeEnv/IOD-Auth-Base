@@ -13,12 +13,12 @@ import {
 
 import { Input } from "@/components/ui/input";
 
-import { useUserContext } from "@/lib/contexts/user";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import { useActivityContext } from "@/lib/contexts/activity";
 
 export default function AddActivity() {
-  const { AddActivity } = useUserContext();
+  const { AddActivity } = useActivityContext();
   const form = useForm({
     defaultValues: {
       name: "",
@@ -43,13 +43,14 @@ export default function AddActivity() {
   return (
     <Dialog>
       <DialogTrigger asChild className="flex ">
-        <Button className="ml-auto">Add Activity</Button>
+        <Button>Add Activity</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add Activity</DialogTitle>
           <DialogDescription>
-            Make changes to your activity here. Click save when you're done.
+            Make changes to your activity here. Click save when you&apos;re
+            done.
           </DialogDescription>
         </DialogHeader>
         <form

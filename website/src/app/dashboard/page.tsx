@@ -39,8 +39,10 @@ export default function DashboardPage() {
                 <div className="min-w-[70px]">
                   <Radial
                     title="Steps"
-                    label={data.steps.toString()}
-                    percentage={(data.steps / data.stepsGoal) * 100}
+                    label={(user?.steps ?? 0).toString()}
+                    percentage={
+                      ((user.steps ?? 0) / (user.stepsGoal ?? 1)) * 100
+                    }
                   />
                 </div>
               </div>

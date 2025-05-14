@@ -1,4 +1,5 @@
 import { UserProvider } from "@/lib/contexts/user";
+import { TokenProvider } from "@/lib/contexts/token";
 import { DarkModeProvider } from "@/lib/contexts/darkmode";
 import { Poppins } from "next/font/google";
 import "./globals.css";
@@ -20,9 +21,11 @@ export default function RootLayout({
     <html lang="en" className="bg-background">
       <body className={poppins.variable}>
         <DarkModeProvider>
-          <UserProvider>
-            <div className="flex h-screen w-screen flex-col">{children}</div>
-          </UserProvider>
+          <TokenProvider>
+            <UserProvider>
+              <div className="flex h-screen w-screen flex-col">{children}</div>
+            </UserProvider>
+          </TokenProvider>
         </DarkModeProvider>
         <Toaster richColors />
       </body>

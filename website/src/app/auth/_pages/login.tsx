@@ -5,8 +5,8 @@ import { Form, FormField } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useUserContext } from "@/lib/contexts/user";
 import { toast } from "sonner";
+import { useTokenContext } from "@/lib/contexts/token";
 
 export default function Login() {
   const form = useForm({
@@ -16,7 +16,7 @@ export default function Login() {
     },
   });
   const router = useRouter();
-  const { refreshAccessToken } = useUserContext();
+  const { refreshAccessToken } = useTokenContext();
 
   const onSubmit = async ({
     username,

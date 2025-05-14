@@ -1,6 +1,7 @@
 "use client";
 import Header from "@/components/header";
-import { useUserContext } from "@/lib/contexts/user";
+import { ActivityProvider } from "@/lib/contexts/activity";
+import { useTokenContext } from "@/lib/contexts/token";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -9,7 +10,7 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { isAuthenticated, loading, initialized } = useUserContext();
+  const { isAuthenticated, loading, initialized } = useTokenContext();
   const router = useRouter();
 
   useEffect(() => {
@@ -26,11 +27,13 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className="flex flex-col gap-14 items-center">
-      <Header />
-      <div className="flex flex-col gap-4 max-w-screen-xl w-full p-4">
-        {children}
+    <ActivityProvider>
+      <div className="flex flex-col gap-14 items-center">
+        <Header />
+        <div className="flex flex-col gap-4 max-w-screen-xl w-full p-4">
+          {children}
+        </div>
       </div>
-    </div>
+    </ActivityProvider>
   );
 }

@@ -15,5 +15,4 @@ export type User = {
   steps?: number;
   stepsGoal?: number;
   activityGoal?: number;
-  activities?: Activity[];
 };

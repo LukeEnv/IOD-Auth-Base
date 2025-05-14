@@ -27,9 +27,11 @@ import {
   TooltipProvider,
   TooltipContent,
 } from "./ui/tooltip";
+import { useTokenContext } from "@/lib/contexts/token";
 
 export default function Header() {
-  const { user, signout } = useUserContext();
+  const { user } = useUserContext();
+  const { signout } = useTokenContext();
   const pathname = usePathname();
   const { toggleDarkMode, isDarkMode } = useDarkMode();
 
